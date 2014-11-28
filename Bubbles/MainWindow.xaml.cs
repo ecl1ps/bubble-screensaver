@@ -12,13 +12,13 @@ namespace Bubbles
     {
         private Worker worker;
         private BubblesSettings settings;
-        private static Size minimumSize = new Size(300, 400);
+        private static Size minimumSize = new Size(400, 400);
 
         public MainWindow(BubblesSettings settings)
         {
             InitializeComponent();
             this.settings = settings;
-            MainGrid.Background = new SolidColorBrush(Color.FromArgb(50, 0, 0, 0));
+            MainGrid.Background = new SolidColorBrush(Color.FromArgb((byte)(settings.BackgroundAlpha * byte.MaxValue), 0, 0, 0));
         }
 
         private void OnLoaded(object sender, RoutedEventArgs e)
@@ -44,7 +44,7 @@ namespace Bubbles
         {
             Random rand = new Random(Environment.TickCount);
 
-            for (var i = 0; i < 50; i++)
+            for (var i = 0; i < settings.Count; i++)
                 CreateRandomSphere(bounds, rand);
         }
 
@@ -53,9 +53,9 @@ namespace Bubbles
             var color = Color.FromRgb((byte)rand.Next(0, byte.MaxValue + 1), (byte)rand.Next(0, byte.MaxValue + 1), (byte)rand.Next(0, byte.MaxValue + 1));
 
             worker.AddElement(new MovableSphere(bounds, 
-                CreateElement(color, rand.Next(40, 60)), 
-                new Vector(rand.Next(0, (int)(bounds.Width - 50)), rand.Next(0, (int)(bounds.Height - 50))),
-                new Vector(rand.NextDouble() - 0.5, rand.NextDouble() - 0.5), rand.Next(100, 250) / 100.0));
+                CreateElement(color, rand.Next(settings.RadiusMin, settings.RadiusMax)),
+                new Vector(rand.Next(0, (int)(bounds.Width - settings.RadiusMax)), rand.Next(0, (int)(bounds.Height - settings.RadiusMax))),
+                new Vector(rand.NextDouble() - 0.5, rand.NextDouble() - 0.5), rand.Next(settings.SpeedMin, settings.SpeedMax) / 100.0));
         }
 
         private Ellipse CreateElement(Color color, int radius)
@@ -69,7 +69,8 @@ namespace Bubbles
                 Fill = new RadialGradientBrush(color, transparent), 
                 StrokeThickness = 1, 
                 Height = radius, 
-                Width =  radius
+                Width =  radius,
+                IsHitTestVisible = false
             };
 
             MainCanvas.Children.Add(el);
