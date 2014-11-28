@@ -6,29 +6,24 @@ namespace Bubbles
 {
     public partial class App : Application
     {
-        // Used to host WPF content in preview mode, attach HwndSource to parent Win32 window.
-        private HwndSource winWpfContent;
         private MainWindow winSaver;
  
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            if (e.Args.Length == 0)
+            var settings = BubblesSettings.Load(BubblesSettings.SettingsFile);
+
+            if (e.Args.Length == 0 || e.Args[0].ToLower().StartsWith("/s"))     
             {
-                MainWindow win = new MainWindow();
+                MainWindow win = new MainWindow(settings) { WindowState = WindowState.Maximized };
                 win.Show();
             }
             // Preview mode--display in little window in Screen Saver dialog
-            // (Not invoked with Preview button, which runs Screen Saver in
-            // normal /s mode).
-            else if (e.Args[0].ToLower().StartsWith("/p"))        
+            else if (e.Args[0].ToLower().StartsWith("/p"))
             {
-                winSaver = new MainWindow();
- 
-                Int32 previewHandle = Convert.ToInt32(e.Args[1]);
-                //WindowInteropHelper interopWin1 = new WindowInteropHelper(win);
-                //interopWin1.Owner = new IntPtr(previewHandle);
- 
-                IntPtr pPreviewHnd = new IntPtr(previewHandle);
+                winSaver = new MainWindow(settings);
+
+                string handle = e.Args[0].Contains(":") ? e.Args[0].Split(':')[1] : e.Args[1];
+                IntPtr pPreviewHnd = new IntPtr(Convert.ToInt32(handle));
  
                 RECT lpRect = new RECT();
                 Win32API.GetClientRect(pPreviewHnd, ref lpRect);
@@ -43,29 +38,15 @@ namespace Bubbles
                     WindowStyle = (int) (WindowStyles.WS_VISIBLE | WindowStyles.WS_CHILD | WindowStyles.WS_CLIPCHILDREN)
                 };
 
-                winWpfContent = new HwndSource(sourceParams);
+                var winWpfContent = new HwndSource(sourceParams);
                 winWpfContent.Disposed += winWPFContent_Disposed;
                 winWpfContent.RootVisual = winSaver.MainGrid;
             }
- 
-            // Normal screensaver mode.  Either screen saver kicked in normally,
-            // or was launched from Preview button
-            else if (e.Args[0].ToLower().StartsWith("/s"))     
-            {
-                MainWindow win = new MainWindow();
-                win.WindowState = WindowState.Maximized;
-                win.Show();
-            }
- 
-            // Config mode, launched from Settings button in screen saver dialog
             else if (e.Args[0].ToLower().StartsWith("/c"))     
             {
-                /*SettingsWindow win = new SettingsWindow();
-                win.Show();*/
+                SettingsWindow win = new SettingsWindow();
+                win.Show();
             }
- 
-            // If not running in one of the sanctioned modes, shut down the app
-            // immediately (because we don't have a GUI).
             else
             {
                 Application.Current.Shutdown();
@@ -83,7 +64,6 @@ namespace Bubbles
         void winWPFContent_Disposed(object sender, EventArgs e)
         {
             winSaver.Close();
-//            Application.Current.Shutdown();
         }
     }
 }

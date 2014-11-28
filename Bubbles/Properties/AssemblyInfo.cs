@@ -5,12 +5,12 @@ using System.Windows;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Bubbles")]
+[assembly: AssemblyTitle("BouncingBubbles")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("GOPAS, a.s.")]
-[assembly: AssemblyProduct("Bubbles")]
-[assembly: AssemblyCopyright("Copyright © GOPAS, a.s. 2014")]
+[assembly: AssemblyCompany("Eclips")]
+[assembly: AssemblyProduct("BouncingBubbles")]
+[assembly: AssemblyCopyright("Copyright © Eclips 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

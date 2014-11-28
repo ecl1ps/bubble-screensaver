@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bubbles", "Bubbles\Bubbles.csproj", "{BE8BBDA4-F328-4651-B9D6-AB81F1B5DB18}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BouncingBubbles", "Bubbles\BouncingBubbles.csproj", "{BE8BBDA4-F328-4651-B9D6-AB81F1B5DB18}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

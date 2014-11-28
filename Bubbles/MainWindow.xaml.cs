@@ -11,15 +11,30 @@ namespace Bubbles
     public partial class MainWindow : Window
     {
         private Worker worker;
+        private BubblesSettings settings;
+        private static Size minimumSize = new Size(300, 400);
 
-        public MainWindow()
+        public MainWindow(BubblesSettings settings)
         {
             InitializeComponent();
+            this.settings = settings;
+            MainGrid.Background = new SolidColorBrush(Color.FromArgb(50, 0, 0, 0));
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            Size bounds = new Size(Width, Height);
+            Size bounds;
+            if (double.IsNaN(Width))
+            {
+                bounds = minimumSize;
+                MainGrid.Width = minimumSize.Width;
+                MainGrid.Height = minimumSize.Height;
+            }
+            else
+            {
+                bounds = new Size(Width, Height);
+            }
+
             worker = new Worker(bounds);
             CreateElements(bounds);
             worker.Start();
@@ -73,12 +88,12 @@ namespace Bubbles
             //worker.SetNewBounds(e.NewSize);
         }
 
-        private void Window_MouseDown(object sender, MouseButtonEventArgs e)
+        private void OnMouseDown(object sender, MouseButtonEventArgs e)
         {
             Application.Current.Shutdown();
         }
 
-        private void Window_KeyDown(object sender, KeyEventArgs e)
+        private void OnKeyDown(object sender, KeyEventArgs e)
         {
             Application.Current.Shutdown();
         }

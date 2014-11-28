@@ -4,7 +4,7 @@ using System.Xml.Serialization;
 
 namespace Bubbles
 {
-    class BubblesSettings
+    public class BubblesSettings
     {
         public const string SettingsFile = "Bubbles.xml";
  
