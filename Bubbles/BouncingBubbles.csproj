@@ -56,8 +56,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BubblesSettings.cs" />
-    <Compile Include="Elements\MovableSphere.cs" />
-    <Compile Include="Elements\IMovable.cs" />
+    <Compile Include="Elements\UpdatableSphere.cs" />
+    <Compile Include="Elements\IUpdatable.cs" />
+    <Compile Include="FastMath.cs" />
     <Compile Include="Interop\InteropDefinitions.cs" />
     <Compile Include="SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>

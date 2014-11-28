@@ -6,9 +6,9 @@ namespace Bubbles
 {
     public class BubblesSettings
     {
-        public const string SettingsFile = "Bubbles.xml";
+        public const string SettingsFile = "BouncingBubbles.xml";
 
-        public int PowerSavings { get; set; }
+        public float PowerSavings { get; set; }
         public float BackgroundAlpha { get; set; }
         public int RadiusMin { get; set; }
         public int RadiusMax { get; set; }
@@ -30,13 +30,13 @@ namespace Bubbles
         /// </summary>
         public void SetDefaults()
         {
-            PowerSavings = 50;
+            PowerSavings = 0.3f;
             BackgroundAlpha = 0.2f;
-            RadiusMin = 40;
-            RadiusMax = 60;
+            RadiusMin = 60;
+            RadiusMax = 100;
             SpeedMin = 100;
-            SpeedMax = 250;
-            Count = 50;
+            SpeedMax = 200;
+            Count = 30;
         }
  
         /// <summary>

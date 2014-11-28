@@ -1,11 +1,10 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Shapes;
 
 namespace Bubbles.Elements
 {
-    public class MovableSphere : IMovable
+    public class UpdatableSphere : IUpdatable
     {
         private Ellipse ellipse;
         private Vector position;
@@ -14,7 +13,7 @@ namespace Bubbles.Elements
         private double speed;
         private bool collidedInLastUpdate;
 
-        public MovableSphere(Size bounds, Ellipse ellipse, Vector position, Vector direction, double speed)
+        public UpdatableSphere(Size bounds, Ellipse ellipse, Vector position, Vector direction, double speed)
         {
             this.ellipse = ellipse;
             this.position = position;
@@ -27,11 +26,11 @@ namespace Bubbles.Elements
             UpdatePosition();
         }
 
-        public void Update(Size bounds)
+        public void Update(Size bounds, float tpf)
         {
             CheckOutOfBounds(bounds);
-            position += direction * speed;
-            Application.Current.Dispatcher.BeginInvoke(new Action(UpdatePosition));
+            position += direction * speed * tpf;
+            UpdatePosition();
         }
 
         private void CheckOutOfBounds(Size bounds)

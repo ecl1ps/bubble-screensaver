@@ -11,7 +11,7 @@ namespace Bubbles
     public partial class MainWindow : Window
     {
         private Worker worker;
-        private BubblesSettings settings;
+        private readonly BubblesSettings settings;
         private static Size minimumSize = new Size(400, 400);
 
         public MainWindow(BubblesSettings settings)
@@ -35,7 +35,7 @@ namespace Bubbles
                 bounds = new Size(Width, Height);
             }
 
-            worker = new Worker(bounds);
+            worker = new Worker(bounds, settings);
             CreateElements(bounds);
             worker.Start();
         }
@@ -52,10 +52,10 @@ namespace Bubbles
         {
             var color = Color.FromRgb((byte)rand.Next(0, byte.MaxValue + 1), (byte)rand.Next(0, byte.MaxValue + 1), (byte)rand.Next(0, byte.MaxValue + 1));
 
-            worker.AddElement(new MovableSphere(bounds, 
+            worker.AddElement(new UpdatableSphere(bounds, 
                 CreateElement(color, rand.Next(settings.RadiusMin, settings.RadiusMax)),
                 new Vector(rand.Next(0, (int)(bounds.Width - settings.RadiusMax)), rand.Next(0, (int)(bounds.Height - settings.RadiusMax))),
-                new Vector(rand.NextDouble() - 0.5, rand.NextDouble() - 0.5), rand.Next(settings.SpeedMin, settings.SpeedMax) / 100.0));
+                new Vector(rand.NextDouble() - 0.5, rand.NextDouble() - 0.5), rand.Next(settings.SpeedMin * 100, settings.SpeedMax * 100) / 100.0));
         }
 
         private Ellipse CreateElement(Color color, int radius)

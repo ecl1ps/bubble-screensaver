@@ -22,7 +22,7 @@
         
         <StackPanel Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.RowSpan="2" Grid.ColumnSpan="3">
             <Label Content="Performance x Power Saving"/>
-            <Slider Maximum="100" Minimum="1" SmallChange="1" LargeChange="10" x:Name="PowerSavingSlider" Value="{Binding Settings.PowerSavings, Mode=TwoWay}"/>
+            <Slider Maximum="1" Minimum="0" SmallChange="0.1" LargeChange="0.2" x:Name="PowerSavingSlider" Value="{Binding Settings.PowerSavings, Mode=TwoWay}"/>
             
             <StackPanel Orientation="Horizontal">
                 <Label Content="Background Alpha:"/>
@@ -40,13 +40,13 @@
                 <Label Content="Minimum Radius:"/>
                 <Label Content="{Binding ElementName=RadiusMinSlider, Path=Value}" ContentStringFormat="{}{0:#}" />
             </StackPanel>
-            <Slider Maximum="100" Minimum="5" SmallChange="1" LargeChange="10" x:Name="RadiusMinSlider" Value="{Binding Settings.RadiusMin, Mode=TwoWay}"/>
+            <Slider Maximum="200" Minimum="5" SmallChange="1" LargeChange="10" x:Name="RadiusMinSlider" Value="{Binding Settings.RadiusMin, Mode=TwoWay}"/>
 
             <StackPanel Orientation="Horizontal">
                 <Label Content="Maximum Radius:"/>
                 <Label Content="{Binding ElementName=RadiusMaxSlider, Path=Value}" ContentStringFormat="{}{0:#}" />
             </StackPanel>
-            <Slider Maximum="100" Minimum="5" SmallChange="1" LargeChange="10" x:Name="RadiusMaxSlider" Value="{Binding Settings.RadiusMax, Mode=TwoWay}"/>
+            <Slider Maximum="200" Minimum="5" SmallChange="1" LargeChange="10" x:Name="RadiusMaxSlider" Value="{Binding Settings.RadiusMax, Mode=TwoWay}"/>
 
             <StackPanel Orientation="Horizontal">
                 <Label Content="Minimum Speed:"/>
