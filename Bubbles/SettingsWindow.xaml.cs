@@ -7,15 +7,13 @@ namespace Bubbles
     /// </summary>
     public partial class SettingsWindow : Window
     {
-        private BubblesSettings settings;
+        public BubblesSettings Settings { get; private set; }
 
         public SettingsWindow()
         {
+            Settings = BubblesSettings.Load(BubblesSettings.SettingsFile);
             InitializeComponent();
-
-            settings = BubblesSettings.Load(BubblesSettings.SettingsFile);
-
-            ObjectCountSlider.Value = settings.Count;
+            DataContext = this;
         }
 
         private void ButtonCancel_Click(object sender, RoutedEventArgs e)
@@ -25,9 +23,13 @@ namespace Bubbles
 
         private void ButtonOk_Click(object sender, RoutedEventArgs e)
         {
-            settings.Count = (int)ObjectCountSlider.Value;
+            if (Settings.RadiusMin > Settings.RadiusMax)
+                Settings.RadiusMin = Settings.RadiusMax;
 
-            settings.Save(BubblesSettings.SettingsFile);
+            if (Settings.SpeedMin > Settings.SpeedMax)
+                Settings.SpeedMin = Settings.SpeedMax;
+
+            Settings.Save(BubblesSettings.SettingsFile);
             Application.Current.Shutdown();
         }
     }

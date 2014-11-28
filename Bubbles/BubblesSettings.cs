@@ -8,6 +8,7 @@ namespace Bubbles
     {
         public const string SettingsFile = "Bubbles.xml";
 
+        public int PowerSavings { get; set; }
         public float BackgroundAlpha { get; set; }
         public int RadiusMin { get; set; }
         public int RadiusMax { get; set; }
@@ -29,6 +30,7 @@ namespace Bubbles
         /// </summary>
         public void SetDefaults()
         {
+            PowerSavings = 50;
             BackgroundAlpha = 0.2f;
             RadiusMin = 40;
             RadiusMax = 60;
@@ -44,11 +46,11 @@ namespace Bubbles
         {
             try
             {
-                XmlSerializer serial = new XmlSerializer(typeof(BubblesSettings));
+                XmlSerializer serializer = new XmlSerializer(typeof(BubblesSettings));
 
                 using (FileStream fs = new FileStream(sSettingsFilename, FileMode.Create))
                     using (TextWriter writer = new StreamWriter(fs, new UTF8Encoding()))
-                        serial.Serialize(writer, this);
+                        serializer.Serialize(writer, this);
             }
             catch { }
         }
@@ -63,10 +65,10 @@ namespace Bubbles
  
             try
             {
-                XmlSerializer serial = new XmlSerializer(typeof (BubblesSettings));
+                XmlSerializer serializer = new XmlSerializer(typeof (BubblesSettings));
                 using (FileStream fs = new FileStream(sSettingsFilename, FileMode.OpenOrCreate))
                     using (TextReader reader = new StreamReader(fs))
-                        settings = (BubblesSettings)serial.Deserialize(reader);
+                        settings = (BubblesSettings)serializer.Deserialize(reader);
             }
             catch {
                 // If we can't load, just create a new object, which gets default values
