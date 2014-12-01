@@ -35,7 +35,7 @@ namespace Bubbles
                 bounds = new Size(Width, Height);
             }
 
-            worker = new Worker(bounds, settings);
+            worker = new Worker(MainVisualArea, bounds, settings);
             CreateElements(bounds);
             worker.Start();
         }
@@ -51,30 +51,35 @@ namespace Bubbles
         private void CreateRandomSphere(Size bounds, Random rand)
         {
             var color = Color.FromRgb((byte)rand.Next(0, byte.MaxValue + 1), (byte)rand.Next(0, byte.MaxValue + 1), (byte)rand.Next(0, byte.MaxValue + 1));
+            var position = new Vector(rand.Next(0, (int) (bounds.Width - settings.RadiusMax)),
+                rand.Next(0, (int) (bounds.Height - settings.RadiusMax)));
+            var radius = rand.Next(settings.RadiusMin, settings.RadiusMax);
 
-            worker.AddElement(new UpdatableSphere(bounds, 
-                CreateElement(color, rand.Next(settings.RadiusMin, settings.RadiusMax)),
-                new Vector(rand.Next(0, (int)(bounds.Width - settings.RadiusMax)), rand.Next(0, (int)(bounds.Height - settings.RadiusMax))),
-                new Vector(rand.NextDouble() - 0.5, rand.NextDouble() - 0.5), rand.Next(settings.SpeedMin * 100, settings.SpeedMax * 100) / 100.0));
+            worker.AddElement(new UpdatableSphere(bounds,
+                CreateElement(color, radius, position), 
+                position,
+                new Vector(rand.NextDouble() - 0.5, rand.NextDouble() - 0.5), 
+                rand.Next(settings.SpeedMin * 100, settings.SpeedMax * 100) / 100.0,
+                radius)
+                );
         }
 
-        private Ellipse CreateElement(Color color, int radius)
+        private DrawingGroup CreateElement(Color color, int radius, Vector position)
         {
             var transparent = color;
             transparent.A = 1;
 
-            var el = new Ellipse
-            {
-                Stroke = new SolidColorBrush(color), 
-                Fill = new RadialGradientBrush(color, transparent), 
-                StrokeThickness = 1, 
-                Height = radius, 
-                Width =  radius,
-                IsHitTestVisible = false
-            };
+            EllipseGeometry geom = new EllipseGeometry(new Point(radius, radius), radius, radius);
+            geom.Freeze();
+            var d = new DrawingGroup();
+            d.Children.Add(new GeometryDrawing(new RadialGradientBrush(color, transparent), new Pen(new SolidColorBrush(color), 1), geom));
 
-            MainCanvas.Children.Add(el);
-            return el;
+            TransformGroup tg = new TransformGroup();
+            tg.Children.Add(new TranslateTransform(position.X, position.Y));
+            d.Transform = tg;
+
+            MainVisualArea.Add(d);
+            return d;
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -82,11 +87,6 @@ namespace Bubbles
             worker.Stop();
 
             base.OnClosing(e);
-        }
-
-        private void MainCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            //worker.SetNewBounds(e.NewSize);
         }
 
         private void OnMouseDown(object sender, MouseButtonEventArgs e)

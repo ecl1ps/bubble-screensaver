@@ -10,13 +10,15 @@ namespace Bubbles
     public class Worker
     {
         private readonly ConcurrentQueue<Action> synchronizationQueue = new ConcurrentQueue<Action>(); 
-        private readonly List<IUpdatable> elements = new List<IUpdatable>();
+        private readonly List<IUpdatable> objects = new List<IUpdatable>();
         private bool isRunning = true;
+        private VisualArea area;
         private Size bounds;
-        private long minimumUpdateTime = 17;
+        private readonly long minimumUpdateTime = 17;
 
-        public Worker(Size bounds, BubblesSettings settings)
+        public Worker(VisualArea area, Size bounds, BubblesSettings settings)
         {
+            this.area = area;
             this.bounds = bounds;
 
             // 10 - 60 fps -> update every 100 - 17 ms
@@ -25,7 +27,7 @@ namespace Bubbles
 
         public void AddElement(IUpdatable el)
         {
-            elements.Add(el);
+            objects.Add(el);
         }
 
         public void Start()
@@ -52,19 +54,23 @@ namespace Bubbles
 
                 sw.Restart();
 
-                while (!synchronizationQueue.IsEmpty)
+                /*while (!synchronizationQueue.IsEmpty)
                 {
                     Action a;
                     synchronizationQueue.TryDequeue(out a);
                     a();
-                }
+                }*/
 
                 if (Application.Current == null)
                     continue;
 
-                Application.Current.Dispatcher.InvokeAsync(() => elements.ForEach(e => e.Update(bounds, tpf)));
+                UpdateSceneObjects(tpf);
+                UpdateGeomtricState();
+
+                area.RunRender();
 
                 elapsedMs = sw.ElapsedMilliseconds;
+                Console.WriteLine(elapsedMs + " : " + tpf);
                 if (elapsedMs < minimumUpdateTime)
                     Thread.Sleep((int)(minimumUpdateTime - elapsedMs));
             }
@@ -72,9 +78,19 @@ namespace Bubbles
             sw.Stop();
         }
 
-        public void SetNewBounds(Size size)
+        private void UpdateGeomtricState()
+        {
+            area.Dispatcher.Invoke(() => objects.ForEach(obj => obj.UpdateGeometric()));
+        }
+
+        public void UpdateSceneObjects(float tpf)
+        {
+            objects.ForEach(obj => obj.Update(bounds, tpf));
+        }
+
+        /*public void SetNewBounds(Size size)
         {
             synchronizationQueue.Enqueue(() => bounds = size);
-        }
+        }*/
     }
 }

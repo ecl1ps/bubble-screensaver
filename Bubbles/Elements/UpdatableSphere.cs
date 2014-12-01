@@ -1,36 +1,34 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Shapes;
 
 namespace Bubbles.Elements
 {
     public class UpdatableSphere : IUpdatable
     {
-        private Ellipse ellipse;
+        private readonly DrawingGroup geometryElement;
         private Vector position;
         private Vector direction;
-        private double radius;
-        private double speed;
+        private readonly double radius;
+        private readonly double speed;
         private bool collidedInLastUpdate;
 
-        public UpdatableSphere(Size bounds, Ellipse ellipse, Vector position, Vector direction, double speed)
+        public UpdatableSphere(Size bounds, DrawingGroup ellipse, Vector position, Vector direction, double speed, double radius)
         {
-            this.ellipse = ellipse;
+            this.geometryElement = ellipse;
             this.position = position;
             this.direction = direction;
             this.direction.Normalize();
             this.speed = speed;
-            radius = ellipse.Width / 2;
+            this.radius = radius;
             collidedInLastUpdate = false;
-
-            UpdatePosition();
         }
 
         public void Update(Size bounds, float tpf)
         {
             CheckOutOfBounds(bounds);
             position += direction * speed * tpf;
-            UpdatePosition();
         }
 
         private void CheckOutOfBounds(Size bounds)
@@ -56,10 +54,10 @@ namespace Bubbles.Elements
             collidedInLastUpdate = collides;
         }
 
-        public void UpdatePosition()
+        public void UpdateGeometric()
         {
-            Canvas.SetLeft(ellipse, position.X);
-            Canvas.SetTop(ellipse, position.Y);
+            ((TransformGroup) geometryElement.Transform).Children.Clear();
+            ((TransformGroup) geometryElement.Transform).Children.Add(new TranslateTransform(position.X, position.Y));
         }
 
         public Vector GetPosition()

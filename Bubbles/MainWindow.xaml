@@ -1,8 +1,9 @@
 ﻿<Window x:Class="Bubbles.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:bubbles="clr-namespace:Bubbles"
         ShowInTaskbar="False" ResizeMode="NoResize" WindowStyle="None" AllowsTransparency="True" Background="Transparent">
     <Grid x:Name="MainGrid" Loaded="OnLoaded" MouseDown="OnMouseDown" KeyDown="OnKeyDown">
-        <Canvas x:Name="MainCanvas" Margin="0" SizeChanged="MainCanvas_SizeChanged" IsHitTestVisible="False"/>
+        <bubbles:VisualArea x:Name="MainVisualArea" IsHitTestVisible="False"/>
     </Grid>
 </Window>
