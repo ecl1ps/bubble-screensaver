@@ -7,7 +7,6 @@ namespace Bubbles
     public class BubblesSettings
     {
         public const string SettingsFile = "BouncingBubbles.xml";
-
         public float PowerSavings { get; set; }
         public float BackgroundAlpha { get; set; }
         public int RadiusMin { get; set; }
@@ -15,6 +14,10 @@ namespace Bubbles
         public int SpeedMin { get; set; }
         public int SpeedMax { get; set; }
         public int Count { get; set; }
+        public byte SphereTpcy { get; set; } 
+        public bool WeBeSphere { get; set; }    
+        public byte CenterTpcy { get; set; }
+
  
         /// <summary>
         /// Instantiate the class, loading settings from a specified file.
@@ -33,10 +36,13 @@ namespace Bubbles
             PowerSavings = 0.3f;
             BackgroundAlpha = 0.2f;
             RadiusMin = 60;
-            RadiusMax = 100;
+            RadiusMax = 80;
             SpeedMin = 100;
             SpeedMax = 200;
-            Count = 30;
+            Count = 20;
+            SphereTpcy = 170;
+            WeBeSphere = false;
+            CenterTpcy = 190;
         }
  
         /// <summary>
