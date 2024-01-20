@@ -80,7 +80,8 @@ namespace Bubbles
             EllipseGeometry geom = new EllipseGeometry(new Point(radius, radius), radius, radius);
             geom.Freeze();
             var d = new DrawingGroup();
-            Color endColor = Color.FromArgb(settings.SphereTpcy, Convert.ToByte(color.R * .25), Convert.ToByte(color.G * .25), Convert.ToByte(color.B * .25));
+            Color endColor = Color.FromArgb(settings.SphereTpcy, Convert.ToByte(color.R * settings.EdgeRatio), 
+                Convert.ToByte(color.G * settings.EdgeRatio), Convert.ToByte(color.B * settings.EdgeRatio));
             Color borderColor = color;
             if (settings.WeBeSphere) borderColor = endColor;
  

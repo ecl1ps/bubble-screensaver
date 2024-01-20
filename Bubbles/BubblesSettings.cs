@@ -6,7 +6,7 @@ namespace Bubbles
 {
     public class BubblesSettings
     {
-        public const string SettingsFile = "BouncingBubbles.xml";
+        public const string SettingsFile = "C:\\Users\\JeffC\\Documents\\Visual Studio 2019\\Projects\\Bubbles\\Bubbles\\bin\\Debug\\BouncingBubbles.xml";
         public float PowerSavings { get; set; }
         public float BackgroundAlpha { get; set; }
         public int RadiusMin { get; set; }
@@ -17,6 +17,8 @@ namespace Bubbles
         public byte SphereTpcy { get; set; } 
         public bool WeBeSphere { get; set; }    
         public byte CenterTpcy { get; set; }
+        public float EdgeRatio { get; set; }
+
 
  
         /// <summary>
@@ -43,6 +45,7 @@ namespace Bubbles
             SphereTpcy = 170;
             WeBeSphere = false;
             CenterTpcy = 190;
+            EdgeRatio = .25f;
         }
  
         /// <summary>
