@@ -54,13 +54,6 @@ namespace Bubbles
 
                 sw.Restart();
 
-                /*while (!synchronizationQueue.IsEmpty)
-                {
-                    Action a;
-                    synchronizationQueue.TryDequeue(out a);
-                    a();
-                }*/
-
                 if (Application.Current == null)
                     continue;
 
