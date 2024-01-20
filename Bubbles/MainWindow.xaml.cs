@@ -19,7 +19,8 @@ namespace Bubbles
 
         [DllImport("kernel32.dll", SetLastError = true)]
         public static extern uint SetThreadExecutionState([In] uint esFlags);
-
+        [DllImport("user32.dll")] 
+        public static extern bool LockWorkStation();
 
         public MainWindow(BubblesSettings settings)
         {
@@ -106,6 +107,8 @@ namespace Bubbles
 
         private void OnMouseDown(object sender, MouseButtonEventArgs e)
         {
+            if (AppContext.BaseDirectory == BubblesSettings.SettingsDir) 
+                { LockWorkStation(); }
             Application.Current.Shutdown();
         }
 

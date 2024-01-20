@@ -6,7 +6,9 @@ namespace Bubbles
 {
     public class BubblesSettings
     {
-        public const string SettingsFile = "C:\\Users\\JeffC\\Documents\\Visual Studio 2019\\Projects\\Bubbles\\Bubbles\\bin\\Debug\\BouncingBubbles.xml";
+        public const string SettingsDir = "C:\\Users\\JeffC\\Documents\\Visual Studio 2019\\Projects\\Bubbles\\Bubbles\\bin\\Debug\\";
+
+        public const string SettingsFile = SettingsDir + "BouncingBubbles.xml";
         public float PowerSavings { get; set; }
         public float BackgroundAlpha { get; set; }
         public int RadiusMin { get; set; }
