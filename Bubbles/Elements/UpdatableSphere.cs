@@ -22,7 +22,6 @@ namespace Bubbles.Elements
             this.direction.Normalize();
             this.speed = speed;
             this.radius = radius;
-            collidedInLastUpdate = false;
         }
 
         public void Update(Size bounds, float tpf)
@@ -35,23 +34,11 @@ namespace Bubbles.Elements
         {
             var pos = GetPosition();
 
-            var collides = false;
+            if (pos.X - radius <= 0 && direction.X < 0) { direction.X *= -1; }
+            if (pos.X + radius >= bounds.Width && direction.X > 0) { direction.X *= -1; }
 
-            if (pos.X - radius <= 0 || pos.X + radius >= bounds.Width)
-            {
-                if (!collidedInLastUpdate)
-                    direction.X *= -1;
-                collides = true;
-            }
-
-            if (pos.Y - radius <= 0 || pos.Y + radius >= bounds.Height)
-            {
-                if (!collidedInLastUpdate)
-                    direction.Y *= -1;
-                collides = true;
-            }
-
-            collidedInLastUpdate = collides;
+            if (pos.Y - radius <= 0 && direction.Y < 0) { direction.Y *= -1; }
+            if (pos.Y + radius >= bounds.Height && direction.Y > 0) { direction.Y *= -1; }
         }
 
         public void UpdateGeometric()

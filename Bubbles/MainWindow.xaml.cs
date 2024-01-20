@@ -3,8 +3,8 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Shapes;
 using Bubbles.Elements;
+using System.Runtime.InteropServices;
 
 namespace Bubbles
 {
@@ -13,12 +13,21 @@ namespace Bubbles
         private Worker worker;
         private readonly BubblesSettings settings;
         private static Size minimumSize = new Size(400, 400);
+        public const uint ES_CONTINUOUS = 0x80000000;
+        public const uint ES_SYSTEM_REQUIRED = 0x00000001;
+        public const uint ES_DISPLAY_REQUIRED = 0x00000002;
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern uint SetThreadExecutionState([In] uint esFlags);
+        [DllImport("user32.dll")] 
+        public static extern bool LockWorkStation();
 
         public MainWindow(BubblesSettings settings)
         {
             InitializeComponent();
             this.settings = settings;
             MainGrid.Background = new SolidColorBrush(Color.FromArgb((byte)(settings.BackgroundAlpha * byte.MaxValue), 0, 0, 0));
+            SetThreadExecutionState(ES_CONTINUOUS | ES_DISPLAY_REQUIRED);
         }
 
         private void OnLoaded(object sender, RoutedEventArgs e)
@@ -50,7 +59,7 @@ namespace Bubbles
 
         private void CreateRandomSphere(Size bounds, Random rand)
         {
-            var color = Color.FromRgb((byte)rand.Next(0, byte.MaxValue + 1), (byte)rand.Next(0, byte.MaxValue + 1), (byte)rand.Next(0, byte.MaxValue + 1));
+            var color = Color.FromArgb(settings.CenterTpcy, (byte)rand.Next(0, byte.MaxValue + 1), (byte)rand.Next(0, byte.MaxValue + 1), (byte)rand.Next(0, byte.MaxValue + 1));
             var position = new Vector(rand.Next(0, (int) (bounds.Width - settings.RadiusMax)),
                 rand.Next(0, (int) (bounds.Height - settings.RadiusMax)));
             var radius = rand.Next(settings.RadiusMin, settings.RadiusMax);
@@ -72,7 +81,13 @@ namespace Bubbles
             EllipseGeometry geom = new EllipseGeometry(new Point(radius, radius), radius, radius);
             geom.Freeze();
             var d = new DrawingGroup();
-            d.Children.Add(new GeometryDrawing(new RadialGradientBrush(color, transparent), new Pen(new SolidColorBrush(color), 1), geom));
+            Color endColor = Color.FromArgb(settings.SphereTpcy, Convert.ToByte(color.R * settings.EdgeRatio), 
+                Convert.ToByte(color.G * settings.EdgeRatio), Convert.ToByte(color.B * settings.EdgeRatio));
+            Color borderColor = color;
+            if (settings.WeBeSphere) borderColor = endColor;
+ 
+            d.Children.Add(new GeometryDrawing(new RadialGradientBrush(color, endColor), 
+                new Pen(new SolidColorBrush(borderColor), 1), geom));
 
             TransformGroup tg = new TransformGroup();
             tg.Children.Add(new TranslateTransform(position.X, position.Y));
@@ -85,12 +100,15 @@ namespace Bubbles
         protected override void OnClosing(CancelEventArgs e)
         {
             worker.Stop();
+            SetThreadExecutionState(ES_CONTINUOUS);
 
             base.OnClosing(e);
         }
 
         private void OnMouseDown(object sender, MouseButtonEventArgs e)
         {
+            if (AppContext.BaseDirectory == BubblesSettings.SettingsDir) 
+                { LockWorkStation(); }
             Application.Current.Shutdown();
         }
 
