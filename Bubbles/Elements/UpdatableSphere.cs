@@ -16,6 +16,21 @@ namespace Bubbles.Elements
         private double BoxMult = 1.25;
         private bool FreeRange = false;
         private Random escapeChance = new Random();
+        private int outsideFence = 800;
+        private int CapturePct = 80;
+
+        private double saveX;
+        private double saveY;
+        private double bigWidth;
+        private double bigHeight;
+        private double minLeft;
+        private double maxRight;
+        private double minTop;
+        private double maxBottom;
+        private double fenceLeft;
+        private double fenceRight;
+        private double fenceTop;
+        private double fenceBottom;
 
         public UpdatableSphere(Size bounds, DrawingGroup ellipse, Vector position, Vector direction, double speed, double radius)
         {
@@ -25,12 +40,38 @@ namespace Bubbles.Elements
             this.direction.Normalize();
             this.speed = speed;
             this.radius = radius;
+
+            bigWidth = bounds.Width * BoxMult;
+            bigHeight = bounds.Height * BoxMult;
+            minLeft = 0 - (bigWidth - bounds.Width) / 2;
+            maxRight = bounds.Width + (bigWidth - bounds.Width) / 2;
+            minTop = 0 - (bigHeight - bounds.Height) / 2;
+            maxBottom = bounds.Height + (bigHeight - bounds.Height) / 2;
+
+            fenceLeft = minLeft - outsideFence;
+            fenceRight = maxRight + outsideFence;
+            fenceTop = minTop - outsideFence;
+            fenceBottom = maxBottom + outsideFence;
         }
 
         public void Update(Size bounds, float tpf)
         {
+            if (FreeRange) { checkForRecapture(bounds); }
             CheckOutOfBounds(bounds);
             position += direction * speed * tpf;
+        }
+
+        private void checkForRecapture(Size bounds)
+        {
+            var pos = GetPosition();
+
+            bool recaptured = true;
+            if (pos.X - radius < 0) { recaptured = false; }
+            if (pos.X + radius > bounds.Width) { recaptured = false; }
+            if (pos.Y - radius < 0) { recaptured = false; }
+            if (pos.Y + radius < bounds.Height) { recaptured = false; }
+
+            if (recaptured) { FreeRange = false; }
         }
 
         private void CheckOutOfBounds(Size bounds)
@@ -41,16 +82,9 @@ namespace Bubbles.Elements
                 return;
             }
             var pos = GetPosition();
-            double saveX = direction.X;
-            double saveY = direction.Y;
 
-            double bigWidth = bounds.Width * BoxMult;
-            double bigHeight = bounds.Height * BoxMult;
-            double minLeft = 0 - (bigWidth - bounds.Width) / 2;
-            double maxRight = bounds.Width + (bigWidth - bounds.Width) / 2;
-            double minTop = 0 - (bigHeight - bounds.Height) / 2;
-            double maxBottom = bounds.Height + (bigHeight - bounds.Height) / 2;
-
+            saveX = direction.X;
+            saveY = direction.Y;
             if (pos.X - radius <= minLeft && direction.X < 0) { direction.X *= -1; }
             if (pos.X + radius >= maxRight && direction.X > 0) { direction.X *= -1; }
 
@@ -59,13 +93,19 @@ namespace Bubbles.Elements
 
             if (saveX != direction.X || saveY != direction.Y)
             {
-                if (escapeChance.Next(100) > 95) { FreeRange = true; }
+                if (escapeChance.Next(100) > CapturePct) { FreeRange = true; }
             }
         }
 
         private void CheckDistantBounds(Size bounds)
         {
-            return;
+            var pos = GetPosition();
+
+            if (pos.X - radius <= fenceLeft && direction.X < 0) { direction.X *= -1; }
+            if (pos.X + radius >= fenceRight && direction.X > 0) { direction.X *= -1; }
+
+            if (pos.Y - radius <= fenceTop && direction.Y < 0) { direction.Y *= -1; }
+            if (pos.Y + radius >= fenceBottom && direction.Y > 0) { direction.Y *= -1; }
         }
 
         public void UpdateGeometric()
