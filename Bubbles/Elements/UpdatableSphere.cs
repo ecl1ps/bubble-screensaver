@@ -17,7 +17,7 @@ namespace Bubbles.Elements
         private bool FreeRange = false;
         private Random escapeChance = new Random();
         private int outsideFence = 800;
-        private int CapturePct = 97;
+        private int CapturePct = 96;
 
         private double saveX;
         private double saveY;

@@ -84,8 +84,7 @@ namespace Bubbles
 
             Color endColor = Color.FromArgb(settings.SphereTpcy, Convert.ToByte(color.R * settings.EdgeRatio), 
                 Convert.ToByte(color.G * settings.EdgeRatio), Convert.ToByte(color.B * settings.EdgeRatio));
-            Color borderColor = Color.FromArgb(255, Convert.ToByte(color.R * settings.EdgeRatio),
-                Convert.ToByte(color.G * settings.EdgeRatio), Convert.ToByte(color.B * settings.EdgeRatio));
+            Color borderColor = Color.FromArgb(255, color.R, color.G, color.B);
             if (settings.WeBeSphere) { borderColor = endColor; }
  
             d.Children.Add(new GeometryDrawing(new RadialGradientBrush(color, endColor), 
