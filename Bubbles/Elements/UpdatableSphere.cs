@@ -69,7 +69,7 @@ namespace Bubbles.Elements
             if (pos.X - radius < 0) { recaptured = false; }
             if (pos.X + radius > bounds.Width) { recaptured = false; }
             if (pos.Y - radius < 0) { recaptured = false; }
-            if (pos.Y + radius < bounds.Height) { recaptured = false; }
+            if (pos.Y + radius > bounds.Height) { recaptured = false; }
 
             if (recaptured) { FreeRange = false; }
         }
