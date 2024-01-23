@@ -81,10 +81,11 @@ namespace Bubbles
             EllipseGeometry geom = new EllipseGeometry(new Point(radius, radius), radius, radius);
             geom.Freeze();
             var d = new DrawingGroup();
+
             Color endColor = Color.FromArgb(settings.SphereTpcy, Convert.ToByte(color.R * settings.EdgeRatio), 
                 Convert.ToByte(color.G * settings.EdgeRatio), Convert.ToByte(color.B * settings.EdgeRatio));
-            Color borderColor = color;
-            if (settings.WeBeSphere) borderColor = endColor;
+            Color borderColor = Color.FromArgb(255, color.R, color.G, color.B);
+            if (settings.WeBeSphere) { borderColor = endColor; }
  
             d.Children.Add(new GeometryDrawing(new RadialGradientBrush(color, endColor), 
                 new Pen(new SolidColorBrush(borderColor), 1), geom));
